@@ -40,6 +40,8 @@
   section{padding:92px 0}
   .center{text-align:center}
   .center .lead{margin:16px auto 0}
+
+  /* nav */
   header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
   .nav-inner{display:flex;align-items:center;justify-content:space-between;height:66px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em}
@@ -53,6 +55,8 @@
   .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
   .btn-sm{padding:8px 16px;font-size:14px}
   .nav-cta{display:flex;gap:10px;align-items:center}
+
+  /* hero */
   .hero{padding:84px 0 70px;background:
       radial-gradient(900px 420px at 82% -8%,rgba(47,107,255,.10),transparent 60%),
       radial-gradient(700px 380px at 5% 10%,rgba(124,108,255,.08),transparent 60%)}
@@ -61,6 +65,8 @@
   .hero p{margin:22px 0 30px}
   .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
   .hero-note{margin-top:18px;font-size:13px;color:var(--ink-3)}
+
+  /* before/after hero art */
   .ba{position:relative;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:4/3.6;background:#dde6f4}
   .scene{position:absolute;inset:0}
   .scene.after{clip-path:inset(0 0 0 50%)}
@@ -80,6 +86,8 @@
   .ba-tag{position:absolute;top:12px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.85)}
   .ba-tag.l{left:12px;color:var(--ink-2)}
   .ba-tag.r{right:12px;color:var(--blue)}
+
+  /* generic cards */
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:44px}
   .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
   .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
@@ -92,6 +100,8 @@
   .ico.v{background:#efeaff;color:var(--violet)}
   .ico.a{background:#fdf1da;color:var(--amber)}
   .ico.p{background:#fce9f1;color:var(--pink)}
+
+  /* loop */
   .loop-wrap{background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:48px;margin-top:46px}
   .loop{position:relative;width:100%;max-width:520px;aspect-ratio:1;margin:0 auto}
   .loop .core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-align:center;box-shadow:0 12px 30px rgba(47,107,255,.35)}
@@ -101,35 +111,64 @@
   .n2{top:50%;right:0;transform:translate(0,-50%);border-color:var(--teal)}
   .n3{bottom:0;left:50%;transform:translate(-50%,0);border-color:var(--violet)}
   .n4{top:50%;left:0;transform:translate(0,-50%);border-color:var(--amber)}
+  .arrow{position:absolute;top:24%;left:50%;transform:translateX(-50%);color:#c2c9da;font-size:22px}
   .loop-side{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:40px}
   .ls{display:flex;gap:14px;align-items:flex-start}
   .ls .dot{flex:0 0 12px;height:12px;border-radius:50%;margin-top:7px}
   .ls b{display:block}
   .ls span{color:var(--ink-2);font-size:14px}
+
+  /* steps */
   .steps{counter-reset:step;margin-top:48px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
   .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;position:relative;box-shadow:var(--shadow-sm)}
   .step::before{counter-increment:step;content:counter(step);position:absolute;top:-16px;left:26px;width:34px;height:34px;border-radius:10px;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
   .step h3{margin:8px 0 8px}
   .step .tag{font-size:12px;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:3px 10px;border-radius:999px}
   .step p{color:var(--ink-2);font-size:14.5px}
+
+  /* tech stack */
   .tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px}
   .tech{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-sm)}
   .tech h3{display:flex;align-items:center;gap:9px;font-size:17px;margin-bottom:14px}
   .chips{display:flex;flex-wrap:wrap;gap:8px}
   .chip{font-size:13px;padding:5px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2)}
   .chip.hot{background:var(--blue-soft);border-color:#d3e0ff;color:var(--blue)}
+
+  /* harness architecture */
+  .harness{margin-top:46px;border:2px solid var(--blue);border-radius:24px;background:#f7f9fd;padding:24px;box-shadow:var(--shadow)}
+  .harness-head{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--blue);margin-bottom:18px;font-size:16px}
+  .harness-body{display:flex;gap:18px}
+  .harness-layers{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .hrow{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .hname{flex:0 0 110px;color:#fff;border-radius:10px;font-weight:700;font-size:14px;text-align:center;padding:9px 6px}
+  .hitems{display:flex;flex-wrap:wrap;gap:8px}
+  .hchip{font-size:13px;padding:5px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2)}
+  .hchip.planned{border-style:dashed;border-color:#8289a3;color:#8289a3;background:#fafbfe}
+  .hchip.brain{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;border:none;font-weight:700}
+  .langfuse{flex:0 0 120px;background:var(--teal);border-radius:14px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:16px;font-weight:700}
+  .langfuse small{font-weight:500;font-size:12px;opacity:.92}
+  .legend{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  .legend .lbox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
+  .legend .lbox b{color:var(--ink)}
+
+  /* scenes */
   .scenes{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;justify-content:center}
   .scene-chip{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 20px;font-weight:600;font-size:14px;box-shadow:var(--shadow-sm)}
   .scene-chip .em{font-size:18px;margin-right:8px}
+
+  /* stats */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
   .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;text-align:center;box-shadow:var(--shadow-sm)}
   .stat .num{font-size:34px;font-weight:800;color:var(--blue);letter-spacing:-.02em}
   .stat .lbl{font-size:13px;color:var(--ink-2);margin-top:4px}
+
+  /* gallery */
   .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:46px}
   .g{border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);background:#fff;border:1px solid var(--line)}
   .g .gimg{aspect-ratio:1/1;position:relative}
   .g .gcap{padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
   .g .gcap b{color:var(--ink)}
+  /* css-art mini scenes */
   .p1{background:linear-gradient(160deg,#ffe0b8,#cfe0ff)}
   .p2{background:linear-gradient(160deg,#e7f0ff,#b8d4ff)}
   .p3{background:linear-gradient(160deg,#f3e7ff,#d9c8ff)}
@@ -137,11 +176,13 @@
   .p5{background:linear-gradient(160deg,#e0f7f1,#b3ece4)}
   .p6{background:linear-gradient(160deg,#fff3d6,#ffe0a8)}
   .gimg .em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:46px}
+
   footer{border-top:1px solid var(--line);padding:48px 0 40px;background:#fff}
   .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
   .foot-links{display:flex;gap:24px;font-size:14px;color:var(--ink-2)}
   .foot-links a:hover{color:var(--blue)}
   .copy{color:var(--ink-3);font-size:13px}
+
   @media (max-width:900px){
     .hero-grid,.grid-2,.grid-3,.grid-4,.tech-grid,.gallery,.stats,.steps,.loop-side{grid-template-columns:1fr}
     .hero-grid{gap:36px}
@@ -149,6 +190,10 @@
     .loop{max-width:340px}
     .node{width:96px;height:96px;font-size:12px}
     .loop-wrap{padding:28px}
+    .harness-body{flex-direction:column}
+    .langfuse{flex:none}
+    .legend{grid-template-columns:1fr}
+    .hname{flex-basis:84px}
   }
 </style>
 </head>
@@ -168,6 +213,7 @@
     <nav class="nav-links">
       <a href="#overview">Overview</a>
       <a href="#how">How it works</a>
+      <a href="#architecture">Architecture</a>
       <a href="#tech">Tech Stack</a>
       <a href="#capabilities">Capabilities</a>
       <a href="#showcase">Showcase</a>
@@ -178,6 +224,7 @@
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
@@ -201,6 +248,7 @@
   </div>
 </section>
 
+<!-- OVERVIEW / PARADIGM -->
 <section id="overview">
   <div class="wrap">
     <div class="center">
@@ -244,6 +292,7 @@
   </div>
 </section>
 
+<!-- HOW IT WORKS -->
 <section id="how" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="center">
@@ -277,6 +326,101 @@
   </div>
 </section>
 
+<!-- HARNESS ARCHITECTURE -->
+<section id="architecture">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow">Harness</span>
+      <h2>One Harness Around the Model</h2>
+      <p class="lead">The LLM is a stateless, probabilistic brain. The harness is everything built around it — the runtime loop, tools, context, memory, knowledge, guardrails and observability — that turns it into a reliable agent. Inside it, the runtime is a Graph (state machine).</p>
+    </div>
+
+    <div class="harness">
+      <div class="harness-head">🧰 Agent Harness — controllable · observable · evaluable (runtime = Graph state machine)</div>
+      <div class="harness-body">
+        <div class="harness-layers">
+          <div class="hrow">
+            <div class="hname" style="background:var(--blue)">交互层</div>
+            <div class="hitems">
+              <span class="hchip">对话输入框</span>
+              <span class="hchip">技能菜单</span>
+              <span class="hchip">推荐指令</span>
+              <span class="hchip">我的指令</span>
+              <span class="hchip">反馈按钮</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--violet)">Agent 决策层</div>
+            <div class="hitems">
+              <span class="hchip">意图识别</span>
+              <span class="hchip">支持边界判断</span>
+              <span class="hchip">混合问题路由</span>
+              <span class="hchip">技能选择</span>
+              <span class="hchip">上下文理解</span>
+              <span class="hchip brain">🧠 LLM Brain</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--teal)">知识层 / RAG</div>
+            <div class="hitems">
+              <span class="hchip planned">FAQ</span>
+              <span class="hchip planned">功能说明</span>
+              <span class="hchip planned">近 7 天更新</span>
+              <span class="hchip planned">训练问题集</span>
+              <span class="hchip">bad case</span>
+              <span class="hchip planned">算法元数据</span>
+              <span class="hchip planned">混合召回 + Rerank</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--ink-3)">状态层</div>
+            <div class="hitems">
+              <span class="hchip">对话历史</span>
+              <span class="hchip">任务状态</span>
+              <span class="hchip">效果快照</span>
+              <span class="hchip">当前项目关联</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--pink)">记忆层</div>
+            <div class="hitems">
+              <span class="hchip">结构化偏好</span>
+              <span class="hchip">行为沉淀</span>
+              <span class="hchip planned">指令模板</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--amber)">工具与执行层</div>
+            <div class="hitems">
+              <span class="hchip">ComfyUI 节点 DAG</span>
+              <span class="hchip">滑杆→节点参数</span>
+              <span class="hchip">nano banana / wan2.7 / qwen</span>
+              <span class="hchip">内部网关 · 外部兜底</span>
+              <span class="hchip">审核 / 水印 / 过修检测</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--teal)">评估与运营层</div>
+            <div class="hitems">
+              <span class="hchip planned">赞踩反馈</span>
+              <span class="hchip">问题记录</span>
+              <span class="hchip">错误兜底</span>
+              <span class="hchip planned">内测白名单</span>
+              <span class="hchip planned">埋点 / 置信度更新</span>
+            </div>
+          </div>
+        </div>
+        <div class="langfuse">🔍 Langfuse<small>Trace · 全链路</small><small>Eval · 在线/离线</small><small>Prompt · 管理</small></div>
+      </div>
+      <div class="legend">
+        <div class="lbox">● 已落地（真实）：<b>交互工作台 · ComfyUI 节点 · 模型网关 · 图像模型 · SQLite · 审核 / 水印 / 过修检测</b></div>
+        <div class="lbox">○ 规划 / 待补（业界完整形态）：<b>知识层 RAG · Langfuse trace/eval · 长期记忆 · 评估运营</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
 <section id="tech">
   <div class="wrap">
     <div class="center">
@@ -347,6 +491,7 @@
   </div>
 </section>
 
+<!-- CAPABILITIES / SCENES -->
 <section id="capabilities" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="center">
@@ -379,6 +524,7 @@
   </div>
 </section>
 
+<!-- SHOWCASE -->
 <section id="showcase">
   <div class="wrap">
     <div class="center">
