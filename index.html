@@ -1,1 +1,573 @@
-__PLACEHOLDER__
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pix Agent — Autonomous Photo Editing Agent</title>
+<meta name="description" content="Pix Agent is an autonomous photo editing agent for B-end photo studios — no step-by-step prompts required. One goal, one click." />
+<style>
+  :root{
+    --bg:#f6f8fc;
+    --surface:#ffffff;
+    --ink:#14182b;
+    --ink-2:#4b5269;
+    --ink-3:#8289a3;
+    --line:#e7eaf3;
+    --blue:#2f6bff;
+    --blue-2:#1e52e6;
+    --blue-soft:#eaf1ff;
+    --teal:#12b5a5;
+    --violet:#7c6cff;
+    --amber:#f5a524;
+    --pink:#f0649d;
+    --shadow:0 10px 30px rgba(20,24,43,.06);
+    --shadow-sm:0 4px 14px rgba(20,24,43,.05);
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px}
+  .eyebrow{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);background:var(--blue-soft);padding:6px 14px;border-radius:999px;margin-bottom:18px}
+  h1{font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-.02em;font-weight:800}
+  h2{font-size:clamp(28px,3.6vw,40px);line-height:1.15;letter-spacing:-.01em;font-weight:800}
+  h3{font-size:20px;font-weight:700;letter-spacing:-.01em}
+  .lead{color:var(--ink-2);font-size:18px;max-width:640px}
+  section{padding:92px 0}
+  .center{text-align:center}
+  .center .lead{margin:16px auto 0}
+
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:19px;letter-spacing:-.01em}
+  .brand svg{width:30px;height:30px}
+  .nav-links{display:flex;gap:30px;font-size:15px;font-weight:500;color:var(--ink-2)}
+  .nav-links a:hover{color:var(--blue)}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:15px;padding:11px 22px;border-radius:12px;transition:.18s;cursor:pointer;border:1px solid transparent}
+  .btn-primary{background:var(--blue);color:#fff}
+  .btn-primary:hover{background:var(--blue-2);transform:translateY(-1px)}
+  .btn-ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+  .btn-sm{padding:8px 16px;font-size:14px}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .lang-btn{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-size:14px;font-weight:600;cursor:pointer}
+  .lang-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+  .hero{padding:84px 0 70px;background:
+      radial-gradient(900px 420px at 82% -8%,rgba(47,107,255,.10),transparent 60%),
+      radial-gradient(700px 380px at 5% 10%,rgba(124,108,255,.08),transparent 60%)}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .hero h1 .hl{background:linear-gradient(90deg,var(--blue),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{margin:22px 0 30px}
+  .hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-note{margin-top:18px;font-size:13px;color:var(--ink-3)}
+
+  .ba{position:relative;border-radius:20px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:4/3.6;background:#dde6f4}
+  .scene{position:absolute;inset:0}
+  .scene.after{clip-path:inset(0 0 0 50%)}
+  .sky{position:absolute;inset:0}
+  .sky.before{background:linear-gradient(180deg,#b9c3d6 0%,#d3d9e6 55%,#c4c9d6 100%)}
+  .sky.after{background:linear-gradient(180deg,#ffb87d 0%,#ffd7a0 38%,#fde9c8 58%,#e7d9f6 100%)}
+  .sun{position:absolute;width:74px;height:74px;border-radius:50%;top:34%;left:32%}
+  .sun.before{background:#e8ebf3;box-shadow:0 0 0 18px rgba(232,235,243,.5)}
+  .sun.after{background:#fff2c4;box-shadow:0 0 0 18px rgba(255,200,120,.45),0 0 60px rgba(255,180,100,.7)}
+  .sea{position:absolute;left:0;right:0;bottom:0;height:26%}
+  .sea.before{background:linear-gradient(180deg,#9aa3b8,#828aa0)}
+  .sea.after{background:linear-gradient(180deg,#e8a36c,#c97a55)}
+  .sil{position:absolute;bottom:20%;left:24%;width:26px;height:64px;background:#14182b;border-radius:14px 14px 4px 4px;opacity:.78}
+  .sil::after{content:"";position:absolute;top:-14px;left:4px;width:18px;height:18px;border-radius:50%;background:#14182b}
+  .ba-divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+  .ba-handle{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:#fff;box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--blue)}
+  .ba-tag{position:absolute;top:12px;padding:4px 12px;border-radius:999px;font-size:12px;font-weight:700;background:rgba(255,255,255,.85)}
+  .ba-tag.l{left:12px;color:var(--ink-2)}
+  .ba-tag.r{right:12px;color:var(--blue)}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:44px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-sm)}
+  .card h3{margin-bottom:10px}
+  .card p{color:var(--ink-2);font-size:15px}
+  .ico{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:22px}
+  .ico.b{background:var(--blue-soft);color:var(--blue)}
+  .ico.t{background:#e3f7f4;color:var(--teal)}
+  .ico.v{background:#efeaff;color:var(--violet)}
+  .ico.a{background:#fdf1da;color:var(--amber)}
+  .ico.p{background:#fce9f1;color:var(--pink)}
+
+  .loop-wrap{background:var(--surface);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:48px;margin-top:46px}
+  .loop{position:relative;width:100%;max-width:520px;aspect-ratio:1;margin:0 auto}
+  .loop .core{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--violet));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;text-align:center;box-shadow:0 12px 30px rgba(47,107,255,.35)}
+  .node{position:absolute;width:128px;height:128px;border-radius:50%;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow-sm);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:700;font-size:14px;gap:4px}
+  .node small{font-weight:500;color:var(--ink-3);font-size:11px}
+  .n1{top:0;left:50%;transform:translate(-50%,0);border-color:var(--blue)}
+  .n2{top:50%;right:0;transform:translate(0,-50%);border-color:var(--teal)}
+  .n3{bottom:0;left:50%;transform:translate(-50%,0);border-color:var(--violet)}
+  .n4{top:50%;left:0;transform:translate(0,-50%);border-color:var(--amber)}
+  .loop-side{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:40px}
+  .ls{display:flex;gap:14px;align-items:flex-start}
+  .ls .dot{flex:0 0 12px;height:12px;border-radius:50%;margin-top:7px}
+  .ls b{display:block}
+  .ls span{color:var(--ink-2);font-size:14px}
+
+  .steps{counter-reset:step;margin-top:48px;display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;position:relative;box-shadow:var(--shadow-sm)}
+  .step::before{counter-increment:step;content:counter(step);position:absolute;top:-16px;left:26px;width:34px;height:34px;border-radius:10px;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .step h3{margin:8px 0 8px}
+  .step .tag{font-size:12px;font-weight:600;color:var(--blue);background:var(--blue-soft);padding:3px 10px;border-radius:999px}
+  .step p{color:var(--ink-2);font-size:14.5px}
+
+  .tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px}
+  .tech{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow-sm)}
+  .tech h3{display:flex;align-items:center;gap:9px;font-size:17px;margin-bottom:14px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:13px;padding:5px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2)}
+  .chip.hot{background:var(--blue-soft);border-color:#d3e0ff;color:var(--blue)}
+
+  .harness{margin-top:46px;border:2px solid var(--blue);border-radius:24px;background:#f7f9fd;padding:24px;box-shadow:var(--shadow)}
+  .harness-head{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--blue);margin-bottom:18px;font-size:16px}
+  .harness-body{display:flex;gap:18px}
+  .harness-layers{flex:1;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .hrow{display:flex;align-items:center;gap:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .hname{flex:0 0 130px;color:#fff;border-radius:10px;font-weight:700;font-size:14px;text-align:center;padding:9px 6px}
+  .hitems{display:flex;flex-wrap:wrap;gap:8px}
+  .hchip{font-size:13px;padding:5px 12px;border-radius:8px;background:var(--bg);border:1px solid var(--line);color:var(--ink-2)}
+  .hchip.brain{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;border:none;font-weight:700}
+  .langfuse{flex:0 0 120px;background:var(--teal);border-radius:14px;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:16px;font-weight:700}
+  .langfuse small{font-weight:500;font-size:12px;opacity:.92}
+
+  .scenes{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;justify-content:center}
+  .scene-chip{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 20px;font-weight:600;font-size:14px;box-shadow:var(--shadow-sm)}
+  .scene-chip .em{font-size:18px;margin-right:8px}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
+  .stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;text-align:center;box-shadow:var(--shadow-sm)}
+  .stat .num{font-size:34px;font-weight:800;color:var(--blue);letter-spacing:-.02em}
+  .stat .lbl{font-size:13px;color:var(--ink-2);margin-top:4px}
+
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:46px}
+  .g{border-radius:16px;overflow:hidden;box-shadow:var(--shadow-sm);background:#fff;border:1px solid var(--line)}
+  .g .gimg{aspect-ratio:1/1;position:relative}
+  .g .gcap{padding:14px 16px;font-size:13.5px;color:var(--ink-2)}
+  .g .gcap b{color:var(--ink)}
+  .p1{background:linear-gradient(160deg,#ffe0b8,#cfe0ff)}
+  .p2{background:linear-gradient(160deg,#e7f0ff,#b8d4ff)}
+  .p3{background:linear-gradient(160deg,#f3e7ff,#d9c8ff)}
+  .p4{background:linear-gradient(160deg,#ffe7f0,#ffc8dd)}
+  .p5{background:linear-gradient(160deg,#e0f7f1,#b3ece4)}
+  .p6{background:linear-gradient(160deg,#fff3d6,#ffe0a8)}
+  .gimg .em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:46px}
+
+  footer{border-top:1px solid var(--line);padding:48px 0 40px;background:#fff}
+  .foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+  .foot-links{display:flex;gap:24px;font-size:14px;color:var(--ink-2)}
+  .foot-links a:hover{color:var(--blue)}
+  .copy{color:var(--ink-3);font-size:13px}
+
+  @media (max-width:900px){
+    .hero-grid,.grid-2,.grid-3,.grid-4,.tech-grid,.gallery,.stats,.steps,.loop-side{grid-template-columns:1fr}
+    .hero-grid{gap:36px}
+    .nav-links{display:none}
+    .loop{max-width:340px}
+    .node{width:96px;height:96px;font-size:12px}
+    .loop-wrap{padding:28px}
+    .harness-body{flex-direction:column}
+    .langfuse{flex:none}
+    .hname{flex-basis:90px}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" fill="none">
+        <rect x="3" y="3" width="34" height="34" rx="10" fill="#2f6bff"/>
+        <circle cx="20" cy="20" r="9" fill="#fff"/>
+        <circle cx="20" cy="20" r="4" fill="#2f6bff"/>
+        <path d="M20 6v5M20 29v5M6 20h5M29 20h5" stroke="#fff" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      Pix Agent
+    </div>
+    <nav class="nav-links">
+      <a href="#overview" data-zh="概览">Overview</a>
+      <a href="#how" data-zh="工作原理">How it works</a>
+      <a href="#architecture" data-zh="架构">Architecture</a>
+      <a href="#tech" data-zh="技术栈">Tech Stack</a>
+      <a href="#capabilities" data-zh="能力">Capabilities</a>
+      <a href="#showcase" data-zh="案例">Showcase</a>
+    </nav>
+    <div class="nav-cta">
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">中文</button>
+      <a class="btn btn-primary btn-sm" href="https://github.com/DAgogo04/PixAgent" target="_blank" rel="noopener" data-zh="代码 ★">Code ★</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow" data-zh="自主图像编辑">Autonomous Image Editing</span>
+      <h1 data-zh="让<span class=&quot;hl&quot;>审美意图</span><br/>成为<span class=&quot;hl&quot;>视觉现实</span>">Where <span class="hl">Aesthetic Intent</span><br/>Becomes <span class="hl">Visual Reality</span></h1>
+      <p class="lead" data-zh="Pix Agent 是面向 B 端影楼/工作室的自主修图 Agent。它感知照片、规划修图、驱动参数化工具——无需逐步提示词。一个目标，一次点击，可控增强。">Pix Agent is an autonomous photo editing agent for B-end photo studios. It perceives your photos, plans the editing, and drives parameterized tools — no step-by-step prompts required. One goal, one click, controllable enhancement.</p>
+      <div class="hero-btns">
+        <a class="btn btn-primary" href="#how" data-zh="工作原理">How it works</a>
+        <a class="btn btn-ghost" href="https://github.com/DAgogo04/PixAgent" target="_blank" rel="noopener" data-zh="代码（点 ★ 关注）">Code (★ to follow)</a>
+      </div>
+      <p class="hero-note" data-zh="内部模型优先，外部模型兜底 · 高风险操作必须显式确认">Internal models first, external models as fallback · Risky actions always require explicit confirmation</p>
+    </div>
+    <div class="ba">
+      <div class="scene"><div class="sky before"></div><div class="sun before"></div><div class="sea before"></div><div class="sil"></div></div>
+      <div class="scene after"><div class="sky after"></div><div class="sun after"></div><div class="sea after"></div><div class="sil"></div></div>
+      <div class="ba-divider"></div>
+      <div class="ba-handle">⇆</div>
+      <span class="ba-tag l" data-zh="输入">Input</span>
+      <span class="ba-tag r" data-zh="输出">Output</span>
+    </div>
+  </div>
+</section>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow" data-zh="范式">Paradigm</span>
+      <h2 data-zh="别再手动修图，<br/>交给 Agent。">Stop Editing Manually.<br/>Let the Agent Handle It.</h2>
+      <p class="lead" data-zh="传统修图依赖专业经验、无尽的参数调整和疲惫的试错。Pix Agent 用「Agent 在环」系统替代脆弱的「人在环」流程，完成感知、规划、执行与评估。">Traditional photo editing demands expertise, endless parameter tuning, and exhausting trial-and-error. Pix Agent replaces a fragile human-in-the-loop pipeline with an agent-in-the-loop system that perceives, plans, executes, and evaluates.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="ico b">🧑‍🎨</div>
+        <h3 data-zh="人在环">Human-in-the-loop</h3>
+        <p data-zh="<b>专业门槛</b>——修图师难以把审美意图转化为具体操作。<br/><br/><b>算法选择</b>——用哪个工具、哪个节点、什么数值？旋钮太多，没有指引。<br/><br/><b>交互疲劳</b>——无休止的手动迭代和昂贵重跑，令人沮丧。"><b>Expertise barrier</b> — editors struggle to translate an aesthetic intent into concrete operations.<br/><br/>
+        <b>Algorithm selection</b> — which tool, which node, which value? Too many knobs, no guidance.<br/><br/>
+        <b>Interaction fatigue</b> — endless manual iterations and costly re-runs lead to frustration.</p>
+      </div>
+      <div class="card">
+        <div class="ico t">🤖</div>
+        <h3 data-zh="Agent 在环">Agent-in-the-loop</h3>
+        <p data-zh="<b>感知</b>——视觉语言模型理解照片并提出原子修图动作。<br/><br/><b>技能与规划</b>——技能菜单与预设指令把模糊表达变成可执行计划。<br/><br/><b>执行与记忆</b>——参数化工具按预览/确认执行；按场景学习偏好。"><b>Perceive</b> — a vision-language model understands the photo and proposes atomic editing actions.<br/><br/>
+        <b>Skill &amp; plan</b> — skill menus and preset instructions turn vague words into an executable plan.<br/><br/>
+        <b>Execute &amp; remember</b> — parameterized tools run with preview/confirm; preferences are learned per scene.</p>
+      </div>
+    </div>
+
+    <div class="loop-wrap">
+      <div class="loop">
+        <div class="node n1" data-zh="感知器<small>理解图像</small>">Perceiver<small>Understand image</small></div>
+        <div class="node n2" data-zh="执行器<small>工具 · 修图</small>">Executor<small>Tools · edit</small></div>
+        <div class="node n3" data-zh="评估器<small>质量评分</small>">Evaluator<small>Quality score</small></div>
+        <div class="node n4" data-zh="规划器<small>技能 · 规划</small>">Planner<small>Skills · plan</small></div>
+        <div class="core">Pix<br/>Agent</div>
+      </div>
+      <div class="loop-side">
+        <div class="ls"><span class="dot" style="background:var(--blue)"></span><div><b data-zh="闭环而非单次">Closed-loop, not one-shot</b><span data-zh="感知→规划→执行→评估循环直到结果收敛，每步都有视觉反馈。">Perceive → plan → execute → evaluate cycles until the result converges, with visual feedback at every step.</span></div></div>
+        <div class="ls"><span class="dot" style="background:var(--teal)"></span><div><b data-zh="参数化工具">Parameterized tooling</b><span data-zh="Agent 控制现有修图工具（节点），而非盲目生成——每次改动都可解释。">The agent controls existing editing tools (nodes) rather than generating blindly — every change is interpretable.</span></div></div>
+        <div class="ls"><span class="dot" style="background:var(--violet)"></span><div><b data-zh="场景记忆">Memory per scene</b><span data-zh="偏好与修图历史按场景存储，Agent 不会重复或矛盾。">Preferences and editing history are stored by scene, so the agent doesn't repeat or contradict edits.</span></div></div>
+        <div class="ls"><span class="dot" style="background:var(--amber)"></span><div><b data-zh="人始终可控">Human stays in control</b><span data-zh="高风险、扣分操作执行前必须显式确认。">High-risk, point-deducting operations require explicit confirmation before execution.</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow" data-zh="底层机制">Under the Hood</span>
+      <h2 data-zh="Pix Agent 如何工作">How Pix Agent Works</h2>
+      <p class="lead" data-zh="状态机驱动的 Agent：确定性流程控制各阶段，模型在每个阶段内提供语义智能。">A state-machine-driven agent: deterministic flow controls the stages, while the model provides semantic intelligence inside each stage.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="tag" data-zh="视觉语言模型">Vision-Language Model</span>
+        <h3 data-zh="感知器">Perceiver</h3>
+        <p data-zh="VLM 理解图像和用户目标，再把请求路由到支持的技能。置信度低时触发澄清而非猜测。">A VLM interprets the image and the user's goal, then routes the request to a supported skill. Low confidence triggers clarification instead of a guess.</p>
+      </div>
+      <div class="step">
+        <span class="tag" data-zh="技能化输入">Skill-based Input</span>
+        <h3 data-zh="技能菜单与预设">Skill menu &amp; presets</h3>
+        <p data-zh="为降低「不知道怎么描述」的门槛，Agent 提供技能菜单、流程指引（如证件照流程）和常见抽象词的预设提示词。">To lower the "I don't know how to describe it" barrier, the agent offers skill menus, process instructions (e.g. an ID-photo workflow), and preset prompts for common abstract words.</p>
+      </div>
+      <div class="step">
+        <span class="tag" data-zh="工具编排">Tool Orchestration</span>
+        <h3 data-zh="执行器">Executor</h3>
+        <p data-zh="产品滑杆/选项映射到修图节点参数。预览-确认分离 + 单任务会话状态，让修图安全可恢复。">Product sliders/options map to editing-node parameters. A preview–confirm separation and a single-task-per-conversation state keep edits safe and resumable.</p>
+      </div>
+      <div class="step">
+        <span class="tag" data-zh="多指标评分">Multi-metric Scoring</span>
+        <h3 data-zh="评估器与记忆">Evaluator &amp; memory</h3>
+        <p data-zh="带置信度阈值的两层偏好模型决定自动应用还是询问。Bad case 按阶段分类，回流知识库与评测集。">A two-layer preference model with confidence thresholds decides auto-apply vs ask. Bad cases are classified by stage and flow back into the knowledge base and eval set.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HARNESS ARCHITECTURE -->
+<section id="architecture">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow" data-zh="Harness">Harness</span>
+      <h2 data-zh="包裹模型的一套 Harness">One Harness Around the Model</h2>
+      <p class="lead" data-zh="LLM 是无状态、概率性的大脑。Harness 是包在它外面的一切——运行循环、工具、上下文、记忆、知识、护栏与可观测——把它变成可靠 Agent。内部运行时是 Graph（状态机）。">The LLM is a stateless, probabilistic brain. The harness is everything built around it — the runtime loop, tools, context, memory, knowledge, guardrails and observability — that turns it into a reliable agent. Inside it, the runtime is a Graph (state machine).</p>
+    </div>
+
+    <div class="harness">
+      <div class="harness-head" data-zh="🧰 Agent Harness——可控 · 可观测 · 可评测（运行时 = Graph 状态机）">🧰 Agent Harness — controllable · observable · evaluable (runtime = Graph state machine)</div>
+      <div class="harness-body">
+        <div class="harness-layers">
+          <div class="hrow">
+            <div class="hname" style="background:var(--blue)" data-zh="交互层">Interaction Layer</div>
+            <div class="hitems">
+              <span class="hchip" data-zh="对话输入框">Chat input</span>
+              <span class="hchip" data-zh="技能菜单">Skill menu</span>
+              <span class="hchip" data-zh="推荐指令">Recommended prompts</span>
+              <span class="hchip" data-zh="我的指令">My prompts</span>
+              <span class="hchip" data-zh="反馈按钮">Feedback button</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--violet)" data-zh="Agent 决策层">Agent Decision Layer</div>
+            <div class="hitems">
+              <span class="hchip" data-zh="意图识别">Intent recognition</span>
+              <span class="hchip" data-zh="支持边界判断">Boundary check</span>
+              <span class="hchip" data-zh="混合问题路由">Mixed routing</span>
+              <span class="hchip" data-zh="技能选择">Skill selection</span>
+              <span class="hchip" data-zh="上下文理解">Context understanding</span>
+              <span class="hchip brain">🧠 LLM Brain</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--teal)" data-zh="知识层 / RAG">Knowledge / RAG</div>
+            <div class="hitems">
+              <span class="hchip" data-zh="FAQ">FAQ</span>
+              <span class="hchip" data-zh="功能说明">Feature docs</span>
+              <span class="hchip" data-zh="近 7 天更新">Last-7-day updates</span>
+              <span class="hchip" data-zh="训练问题集">Training question set</span>
+              <span class="hchip" data-zh="bad case">Bad cases</span>
+              <span class="hchip" data-zh="算法元数据">Algorithm metadata</span>
+              <span class="hchip" data-zh="混合召回 + Rerank">Hybrid retrieval + Rerank</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--ink-3)" data-zh="状态层">State Layer</div>
+            <div class="hitems">
+              <span class="hchip" data-zh="对话历史">Conversation history</span>
+              <span class="hchip" data-zh="任务状态">Task state</span>
+              <span class="hchip" data-zh="效果快照">Effect snapshots</span>
+              <span class="hchip" data-zh="当前项目关联">Current project link</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--pink)" data-zh="记忆层">Memory Layer</div>
+            <div class="hitems">
+              <span class="hchip" data-zh="结构化偏好">Structured preferences</span>
+              <span class="hchip" data-zh="行为沉淀">Behavior sediment</span>
+              <span class="hchip" data-zh="指令模板">Instruction templates</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--amber)" data-zh="工具与执行层">Tool &amp; Execution Layer</div>
+            <div class="hitems">
+              <span class="hchip" data-zh="ComfyUI 节点 DAG">ComfyUI node DAG</span>
+              <span class="hchip" data-zh="滑杆→节点参数">Slider→node params</span>
+              <span class="hchip">nano banana / wan2.7 / qwen</span>
+              <span class="hchip" data-zh="内部网关 · 外部兜底">Internal gateway · external fallback</span>
+              <span class="hchip" data-zh="审核 / 水印 / 过修检测">Moderation / watermark / over-edit check</span>
+            </div>
+          </div>
+          <div class="hrow">
+            <div class="hname" style="background:var(--teal)" data-zh="评估与运营层">Eval &amp; Ops Layer</div>
+            <div class="hitems">
+              <span class="hchip" data-zh="赞踩反馈">Like / dislike feedback</span>
+              <span class="hchip" data-zh="问题记录">Issue logging</span>
+              <span class="hchip" data-zh="错误兜底">Error fallback</span>
+              <span class="hchip" data-zh="内测白名单">Beta whitelist</span>
+              <span class="hchip" data-zh="埋点 / 置信度更新">Instrumentation / confidence update</span>
+            </div>
+          </div>
+        </div>
+        <div class="langfuse" data-zh="🔍 Langfuse<small>Trace · 全链路</small><small>Eval · 在线/离线</small><small>Prompt · 管理</small>">🔍 Langfuse<small>Trace · full chain</small><small>Eval · online / offline</small><small>Prompt · management</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow" data-zh="技术栈">Tech Stack</span>
+      <h2 data-zh="为真实工作流而建">Built for Real Workflows</h2>
+      <p class="lead" data-zh="从意图到可追溯的成品——务实的技术栈，优先可控、成本与稳定。">From intent to a finished, traceable edit — a pragmatic stack that favors control, cost, and stability.</p>
+    </div>
+
+    <div class="tech-grid">
+      <div class="tech">
+        <h3 data-zh="🧩 Agent 编排">🧩 Agent Orchestration</h3>
+        <div class="chips">
+          <span class="chip hot">Python</span>
+          <span class="chip" data-zh="状态机">State machine</span>
+          <span class="chip">Function Calling</span>
+          <span class="chip" data-zh="意图路由">Intent routing</span>
+          <span class="chip" data-zh="POC：低代码平台">POC: low-code platform</span>
+        </div>
+      </div>
+      <div class="tech">
+        <h3 data-zh="🎨 修图工作流">🎨 Editing Workflow</h3>
+        <div class="chips">
+          <span class="chip hot" data-zh="节点式工作流">Node-based workflow</span>
+          <span class="chip" data-zh="DAG 任务编排">DAG task orchestration</span>
+          <span class="chip" data-zh="滑杆→节点映射">Slider→node mapping</span>
+          <span class="chip" data-zh="批量处理">Batch processing</span>
+        </div>
+      </div>
+      <div class="tech">
+        <h3 data-zh="🧠 模型">🧠 Models</h3>
+        <div class="chips">
+          <span class="chip hot" data-zh="图像生成模型">Image generation model</span>
+          <span class="chip hot" data-zh="视频生成模型">Video generation model</span>
+          <span class="chip" data-zh="文本模型">Text model</span>
+          <span class="chip">Embedding</span>
+          <span class="chip" data-zh="内部优先路由">Internal-first routing</span>
+        </div>
+      </div>
+      <div class="tech">
+        <h3 data-zh="💾 状态与记忆">💾 State &amp; Memory</h3>
+        <div class="chips">
+          <span class="chip hot">SQLite</span>
+          <span class="chip" data-zh="参数快照">Parameter snapshots</span>
+          <span class="chip" data-zh="两层偏好">Two-layer preference</span>
+          <span class="chip" data-zh="场景分桶">Scene buckets</span>
+        </div>
+      </div>
+      <div class="tech">
+        <h3 data-zh="🌐 网关与可靠性">🌐 Gateway &amp; Reliability</h3>
+        <div class="chips">
+          <span class="chip hot" data-zh="模型网关">Model gateway</span>
+          <span class="chip" data-zh="限流 / 重试">Rate limit / retry</span>
+          <span class="chip" data-zh="降级 / 故障转移">Fallback &amp; failover</span>
+          <span class="chip" data-zh="全链路日志">Full-trace logging</span>
+        </div>
+      </div>
+      <div class="tech">
+        <h3 data-zh="🔒 安全与质量">🔒 Safety &amp; Quality</h3>
+        <div class="chips">
+          <span class="chip hot" data-zh="内容审核">Content moderation</span>
+          <span class="chip" data-zh="AI 水印">AI watermark</span>
+          <span class="chip" data-zh="过修检测">Over-edit detection</span>
+          <span class="chip" data-zh="显式授权">Explicit authorization</span>
+          <span class="chip" data-zh="评测回归">Eval regression</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section id="capabilities" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow" data-zh="场景感知">Scene-Aware</span>
+      <h2 data-zh="一个 Agent，场景化策略">One Agent, Scene-Specific Strategies</h2>
+      <p class="lead" data-zh="Pix Agent 对内容分类，激活场景专属提示词模板和工具偏好——策略从不通用。">Pix Agent classifies the content and activates a scene-specific prompt template and tool preference — the strategy is never generic.</p>
+    </div>
+    <div class="scenes">
+      <div class="scene-chip" data-zh="婚礼"><span class="em">💍</span>Wedding</div>
+      <div class="scene-chip" data-zh="人像"><span class="em">👤</span>Portrait</div>
+      <div class="scene-chip" data-zh="风景"><span class="em">🏞️</span>Landscape</div>
+      <div class="scene-chip" data-zh="建筑"><span class="em">🏙️</span>Architecture</div>
+      <div class="scene-chip" data-zh="美食与产品"><span class="em">🍜</span>Food &amp; Product</div>
+      <div class="scene-chip" data-zh="弱光"><span class="em">🌙</span>Low-light</div>
+      <div class="scene-chip" data-zh="室内"><span class="em">🛋️</span>Indoor</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">800+</div><div class="lbl" data-zh="覆盖真实场景">real scenarios covered</div></div>
+      <div class="stat"><div class="num">2-step</div><div class="lbl" data-zh="预览-确认分离">preview–confirm separation</div></div>
+      <div class="stat"><div class="num">0.7</div><div class="lbl" data-zh="置信度阈值">confidence threshold</div></div>
+      <div class="stat"><div class="num">6-bucket</div><div class="lbl" data-zh="bad case 归因">bad-case attribution</div></div>
+    </div>
+
+    <div class="grid-3" style="margin-top:46px">
+      <div class="card"><div class="ico b">🎛️</div><h3 data-zh="参数控制">Parameter control</h3><p data-zh="修图映射到可解释的节点参数，结果可调可追溯而非黑盒。">Edits are mapped to interpretable node parameters, so the result is tunable and traceable rather than opaque.</p></div>
+      <div class="card"><div class="ico v">🧠</div><h3 data-zh="个性化">Personalization</h3><p data-zh="显性结构化偏好与隐性行为信号结合置信度门控，决定自动应用或询问。">Visible structured preferences and hidden behavior signals combine with confidence gating to auto-apply or ask.</p></div>
+      <div class="card"><div class="ico t">🔁</div><h3 data-zh="反馈闭环">Feedback loop</h3><p data-zh="显式负反馈重置场景偏好；隐式编辑降权——系统自我纠正。">Explicit negatives reset the scene preference; implicit edits down-weight — the system corrects itself.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SHOWCASE -->
+<section id="showcase">
+  <div class="wrap">
+    <div class="center">
+      <span class="eyebrow" data-zh="成果">Results</span>
+      <h2 data-zh="保留意图 · 审美优先">Intent-Preserving · Aesthetics-First</h2>
+      <p class="lead" data-zh="不是固定配方，Agent 推理意图并选择合适操作，尊重原始叙事的同时提升视觉质量。">Rather than a fixed recipe, the agent reasons about the intent and selects suitable operations, then respects the original narrative while lifting visual quality.</p>
+    </div>
+
+    <div class="gallery">
+      <div class="g"><div class="gimg p1"><span class="em">🌅</span></div><div class="gcap" data-zh="<b>色彩与色调</b>——暖调黄金时刻或冷调暮光宁静。"><b>Color &amp; tone</b> — warm golden-hour grading or cool twilight serenity.</div></div>
+      <div class="g"><div class="gimg p2"><span class="em">🌉</span></div><div class="gcap" data-zh="<b>景深与虚化</b>——电影感背景虚化引导视线。"><b>Depth &amp; bokeh</b> — cinematic background blur to direct attention.</div></div>
+      <div class="g"><div class="gimg p3"><span class="em">🎞️</span></div><div class="gcap" data-zh="<b>风格迁移</b>——整组照片统一胶片质感。"><b>Style transfer</b> — consistent film-style looks across a set.</div></div>
+      <div class="g"><div class="gimg p4"><span class="em">✨</span></div><div class="gcap" data-zh="<b>杂物去除</b>——清理瑕疵与多余物体。"><b>Distraction removal</b> — clean blemishes and unwanted objects.</div></div>
+      <div class="g"><div class="gimg p5"><span class="em">🪄</span></div><div class="gcap" data-zh="<b>内容增强</b>——丰富纹理、恢复细节。"><b>Content enhancement</b> — enrich textures and recover detail.</div></div>
+      <div class="g"><div class="gimg p6"><span class="em">🔆</span></div><div class="gcap" data-zh="<b>氛围</b>——光射线、雾气与发光粒子。"><b>Atmosphere</b> — light rays, mist and luminous particles.</div></div>
+    </div>
+
+    <div class="card" style="margin-top:40px">
+      <h3 data-zh="Agent 如何保持安全">How the agent stays safe</h3>
+      <p data-zh="每个扣分或高风险操作都由显式勾选和预览步骤把关；生成前后内容审核、AI 水印、过修/身份检查内置其中。Agent 可以说「我做不到」——绝不硬填无法落地的答案。">Every point-deducting or high-risk action is gated by an explicit checkbox and a preview step; pre- and post-generation content moderation, AI watermarking and over-edit/identity checks are built in. The agent is allowed to say "I can't" — it never hard-fills an answer it can't ground.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" fill="none" style="width:26px;height:26px">
+        <rect x="3" y="3" width="34" height="34" rx="10" fill="#2f6bff"/>
+        <circle cx="20" cy="20" r="9" fill="#fff"/>
+        <circle cx="20" cy="20" r="4" fill="#2f6bff"/>
+      </svg>
+      Pix Agent
+    </div>
+    <div class="foot-links">
+      <a href="#overview" data-zh="概览">Overview</a>
+      <a href="#how" data-zh="工作原理">How it works</a>
+      <a href="#tech" data-zh="技术栈">Tech Stack</a>
+      <a href="https://github.com/DAgogo04/PixAgent" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div class="copy" data-zh="Pix Agent · 自主修图 Agent —— 项目展示页">Pix Agent · Autonomous photo editing agent — illustrative project page</div>
+  </div>
+</footer>
+
+<script>
+  let currentLang = localStorage.getItem('pix-lang') || 'en';
+  function applyLang(lang){
+    document.querySelectorAll('[data-zh]').forEach(function(el){
+      if(!el.dataset.en){ el.dataset.en = el.innerHTML; }
+      el.innerHTML = (lang === 'zh') ? el.dataset.zh : el.dataset.en;
+    });
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    const btn = document.getElementById('langBtn');
+    if (btn) btn.textContent = lang === 'zh' ? 'English' : '中文';
+    localStorage.setItem('pix-lang', lang);
+  }
+  function toggleLang(){
+    currentLang = currentLang === 'zh' ? 'en' : 'zh';
+    applyLang(currentLang);
+  }
+  applyLang(currentLang);
+</script>
+
+</body>
+</html>
